@@ -1,0 +1,57 @@
+---
+const steps = [
+  {
+    title: "Selección de materiales",
+    description: "Elegimos fibras y pigmentos naturales que respetan el entorno y nuestras tradiciones.",
+    delay: "100"
+  },
+  {
+    title: "Teñido artesanal",
+    description: "Colores extraídos de plantas, semillas y cortezas, aplicados con técnicas ancestrales.",
+    delay: "200"
+  },
+  {
+    title: "Tejido en telar de cintura",
+    description: "Cada prenda es tejida cuidadosamente por manos ikoots, preservando su herencia.",
+    delay: "300"
+  },
+  {
+    title: "Revisión y entrega",
+    description: "Verificamos cada detalle con cariño antes de que llegue a tus manos.",
+    delay: "400"
+  }
+]
+---
+<section class="min-h-screen bg-[#fff6f0] py-20 px-6 sm:px-8 lg:px-20">
+  <div class="max-w-6xl mx-auto text-center space-y-6">
+    <h2 class="text-3xl font-bold text-[#3b2e2a] animate-fadeIn">Nuestro Proceso Artesanal</h2>
+    <div class="w-24 h-1 mx-auto bg-[#a1583c] rounded-full animate-fadeIn animation-delay-200"></div>
+    <p class="text-[#5c4b47] max-w-xl mx-auto animate-fadeIn animation-delay-300">
+      Cada pieza nace del amor por nuestra cultura, respetando el ritmo de la tierra y el corazón de nuestras tejedoras.
+    </p>
+
+    <!-- Timeline -->
+    <div class="relative mt-16 flex flex-col gap-12 lg:flex-row lg:gap-x-12 lg:items-start lg:justify-center">
+
+      <!-- Línea vertical (mobile) -->
+      <div class="absolute left-1/2 top-0 w-1 h-full bg-[#e6cfc3] -translate-x-1/2 z-0 block lg:hidden animate-grow-y"></div>
+
+      <!-- Línea horizontal (desktop) -->
+      <div class="absolute top-[8px] left-0 w-full h-1 bg-[#e6cfc3] z-0 hidden lg:block animate-grow-x"></div>
+
+      {steps.map(({ title, description, delay }, index) => (
+        <div class={`relative flex flex-col items-center text-center lg:w-1/4 animate-fadeIn animation-delay-${delay}`}>
+
+          <!-- Punto -->
+          <div class="w-5 h-5 bg-[#a1583c] rounded-full z-10 border-4 border-[#fff6f0]"></div>
+
+          <!-- Tarjeta -->
+          <div class="bg-white/70 backdrop-blur-lg rounded-xl shadow-lg p-6 mt-6 text-left w-full max-w-xs">
+            <div class="text-[#a1583c] font-bold text-lg mb-2">{title}</div>
+            <p class="text-sm text-[#6b4d42]">{description}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

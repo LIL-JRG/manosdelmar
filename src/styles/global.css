@@ -1,0 +1,129 @@
+
+@import "tailwindcss";
+
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+@layer utilities {
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+@keyframes grow-x {
+  from {
+    transform: scaleX(0);
+    opacity: 0;
+  }
+  to {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+}
+
+@keyframes grow-y {
+  from {
+    transform: scaleY(0);
+    opacity: 0;
+  }
+  to {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+
+.animate-grow-x {
+  animation: grow-x 1s ease-out forwards;
+  transform-origin: left;
+}
+
+.animate-grow-y {
+  animation: grow-y 1s ease-out forwards;
+  transform-origin: top;
+}
+
+
+
+  @keyframes fadeOut {
+    from { opacity: 1; transform: scale(1); }
+    to { opacity: 0; transform: scale(0.95); }
+  }
+
+@keyframes float {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+  100% { transform: translateY(0); }
+}
+
+.floating {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes bounceSlow {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+.animate-bounce-slow {
+  animation: bounceSlow 2.5s infinite;
+}
+
+
+  .animate-fadeIn {
+    animation: fadeIn 0.6s ease-out both !important;
+  }
+
+  .animate-fadeOut {
+    animation: fadeOut 0.4s ease-in forwards;
+  }
+
+  .animation-delay-100 {
+    animation-delay: 100ms !important;
+  }
+  .animation-delay-200 {
+    animation-delay: 200ms !important;
+  }
+  .animation-delay-300 {
+    animation-delay: 300ms !important;
+  }
+  .animation-delay-400 {
+    animation-delay: 400ms !important;
+  }
+  .animation-delay-500 {
+    animation-delay: 500ms !important;
+  }
+  .animation-delay-600 {
+    animation-delay: 600ms !important;
+  }
+}
+
+
+/* Apoya el fallback visual */
+.lite-youtube-fallback {
+  aspect-ratio: 16 / 9;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 1em;
+  padding: 1em;
+  background-color: #000;
+  color: #fff;
+  text-decoration: none;
+}
+.lite-youtube-fallback::before {
+  display: block;
+  content: '';
+  border: solid transparent;
+  border-width: 2em 0 2em 3em;
+  border-left-color: red;
+}
+.lite-youtube-fallback:hover::before {
+  border-left-color: #fff;
+}
+.lite-youtube-fallback:focus {
+  outline: 2px solid red;
+}
+

@@ -1,0 +1,99 @@
+<nav
+  class="w-full fixed top-0 left-0 z-50 bg-[#fef9f3]/80 backdrop-blur-md"
+  role="navigation"
+>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16">
+      <!-- Logo -->
+      <a
+        href="/"
+        class="flex items-center space-x-2 text-[#3b2e2a] font-semibold text-xl tracking-wide"
+      >
+        <img src="/favicon2.png" alt="Logo Manos del Mar" class="h-8 w-auto" />
+        <span>Manos del Mar</span>
+      </a>
+
+      <!-- Desktop Menu -->
+      <div class="hidden md:flex space-x-8">
+        <a
+          href="/"
+          class="text-[#3b2e2a] hover:text-[#a1583c] transition-colors"
+          >Inicio</a
+        >
+        <a
+          href="/catalogo"
+          class="text-[#3b2e2a] hover:text-[#a1583c] transition-colors"
+          >Catálogo</a
+        >
+        <a
+          href="/nosotros"
+          class="text-[#3b2e2a] hover:text-[#a1583c] transition-colors"
+          >Nosotros</a
+        >
+        <a
+          href="/contacto"
+          class="text-[#3b2e2a] hover:text-[#a1583c] transition-colors"
+          >Contacto</a
+        >
+      </div>
+
+      <!-- Hamburger Menu Button -->
+      <div class="md:hidden">
+        <button
+          id="menu-toggle"
+          aria-controls="mobile-menu"
+          aria-expanded="false"
+          class="text-[#3b2e2a] focus:outline-none focus:ring-2 focus:ring-[#a1583c]"
+        >
+          <svg
+            id="menu-icon"
+            class="h-6 w-6 transition-transform duration-300"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path id="bar1" d="M4 6h16"></path>
+            <path id="bar2" d="M4 12h16"></path>
+            <path id="bar3" d="M4 18h16"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div
+    id="mobile-menu"
+    class="md:hidden hidden px-4 pb-4 space-y-2 bg-[#fef9f3] transition-all duration-300"
+  >
+    <a href="/" class="block text-[#3b2e2a] hover:text-[#a1583c]">Inicio</a>
+    <a href="/catalogo" class="block text-[#3b2e2a] hover:text-[#a1583c]"
+      >Catálogo</a
+    >
+    <a href="/nosotros" class="block text-[#3b2e2a] hover:text-[#a1583c]"
+      >Nosotros</a
+    >
+    <a href="/contacto" class="block text-[#3b2e2a] hover:text-[#a1583c]"
+      >Contacto</a
+    >
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const toggle = document.getElementById("menu-toggle");
+      const menu = document.getElementById("mobile-menu");
+
+      if (!toggle || !menu) return;
+
+      toggle.addEventListener("click", () => {
+        menu.classList.toggle("hidden");
+
+        const expanded = toggle.getAttribute("aria-expanded") === "true";
+        toggle.setAttribute("aria-expanded", String(!expanded));
+      });
+    });
+  </script>
+</nav>

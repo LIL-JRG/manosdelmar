@@ -1,0 +1,16 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import Hero from '@/components/Hero.astro';
+import Testimonials from '@/components/Testimonials.astro';
+import ProductGrid from '@/utils/ProductGrid';
+import CTASection from '@/components/CTASection.astro';
+import FAQ from '@/components/FAQ.astro';
+---
+
+<Layout>
+	<Hero />
+	<CTASection />
+	<ProductGrid onlyFeatured client:load limit={11} title="Productos destacados" />
+	<Testimonials />
+	<FAQ />
+</Layout>

@@ -1,0 +1,47 @@
+---
+import FaqItem from "@/utils/FaqItem.tsx";
+---
+
+<section
+  class="min-h-screen bg-[#fef9f3] px-4 sm:px-8 lg:px-20 py-20 flex items-center justify-center"
+>
+  <div class="max-w-4xl w-full text-[#3b2e2a] space-y-10 animate-fadeIn">
+    <div class="text-center">
+      <h2 class="text-3xl font-bold">Preguntas Frecuentes</h2>
+      <div class="w-24 h-1 mx-auto bg-[#a1583c] rounded-full mt-4"></div>
+      <p class="mt-4 text-base text-[#5c4b47]">
+        Te compartimos algunas respuestas a dudas comunes sobre nuestros
+        productos, su cuidado y el trabajo artesanal que hay detrás de cada
+        pieza.
+      </p>
+    </div>
+
+    <div class="space-y-4">
+      <FaqItem
+        question="¿Qué materiales se utilizan en los huipiles?"
+        answer="Trabajamos principalmente con algodón natural hilado a mano y tintes artesanales extraídos de plantas y minerales. Cada huipil es tejido con técnicas tradicionales ikoots que han pasado de generación en generación."
+        client:load
+      />
+      <FaqItem
+        question="¿Cómo debo cuidar mi prenda artesanal?"
+        answer="Para conservar su color, textura y forma, recomendamos lavar a mano con agua fría y jabón neutro. Evita el uso de lavadora, secadora o cloro, y sécala a la sombra para proteger los tintes naturales."
+        client:load
+      />
+      <FaqItem
+        question="¿Puedo pedir una prenda personalizada?"
+        answer="Sí. Puedes solicitar personalizaciones en colores, tallas o patrones. Algunas artesanas incluso pueden adaptar diseños simbólicos según tus ideas. Contáctanos con anticipación para coordinar tu pedido."
+        client:load
+      />
+      <FaqItem
+        question="¿Cuánto tarda en elaborarse una prenda?"
+        answer="El tiempo varía según la complejidad del diseño. La elaboración de un huipil puede tomar entre 3 y 5 semanas, dependiendo de los detalles y el tipo de telar utilizado. Cada prenda es única y tejida con paciencia y dedicación."
+        client:load
+      />
+      <FaqItem
+        question="¿Hacen envíos a toda la República Mexicana?"
+        answer="Sí, realizamos envíos a cualquier parte de México mediante paqueterías confiables. También ofrecemos entregas locales en la región del Istmo de Tehuantepec y puntos de encuentro en mercados artesanales."
+        client:load
+      />
+    </div>
+  </div>
+</section>

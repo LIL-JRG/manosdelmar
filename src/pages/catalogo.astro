@@ -1,0 +1,10 @@
+---
+import Layout from "../layouts/Layout.astro"
+import Proceso from "../components/Process.astro"
+import ProductGrid from '@/utils/ProductGrid';
+---
+
+<Layout title="Manos del Mar | Catálogo de productos">
+    <ProductGrid client:load title="Todos los productos" />
+    <Proceso />
+</Layout>

@@ -1,0 +1,57 @@
+---
+const team = [
+  {
+    name: "Florentina",
+    role: "Costurera",
+    image: "https://api.dicebear.com/9.x/lorelei/svg?seed=Jessica&flip=true",
+/*     image: "/img/team/florentina.webp", */
+    delay: "100",
+  },
+  {
+    name: "Noemí",
+    role: "Lider de proyecto",
+    image: "https://api.dicebear.com/9.x/lorelei/svg?seed=Vivian&flip=true",
+    delay: "200",
+  },
+  {
+    name: "Teresa",
+    role: "Bordadora",
+    image: "https://api.dicebear.com/9.x/lorelei/svg?seed=Riley&flip=true",
+    delay: "300",
+  },
+];
+---
+
+<section class="bg-[#fef9f3] py-20 px-4 sm:px-8 lg:px-20">
+  <div class="max-w-6xl mx-auto text-center mb-12">
+    <h2 class="text-3xl font-bold text-[#3b2e2a] animate-fadeIn">
+      Nuestro equipo
+    </h2>
+    <div
+      class="w-24 h-1 mx-auto bg-[#a1583c] rounded-full mt-4 animate-fadeIn animation-delay-200"
+    >
+    </div>
+    <p class="mt-4 text-[#5c4b47] text-base animate-fadeIn animation-delay-300">
+      Mujeres ikoots que tejen historia, cultura y amor en cada pieza artesanal.
+    </p>
+  </div>
+
+  <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto">
+    {
+      team.map(({ name, role, image, delay }) => (
+        <div
+          class={`bg-white/70 backdrop-blur-lg rounded-xl shadow-lg p-6 text-[#3b2e2a] animate-fadeIn animation-delay-${delay}`}
+        >
+          <img
+            src={image}
+            alt={name}
+            class="w-32 h-32 mx-auto rounded-full object-cover mb-4 border-4 border-[#a1583c]/30"
+            loading="lazy"
+          />
+          <h3 class="text-lg font-semibold">{name}</h3>
+          <p class="text-sm text-[#a1583c]">{role}</p>
+        </div>
+      ))
+    }
+  </div>
+</section>
