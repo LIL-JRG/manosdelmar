@@ -356,7 +356,7 @@ export default function ProductGrid({ limit, title = "Productos destacados", onl
             <button
               onClick={closeModal}
               /* el -0.1 funca, no lo muevas */
-              className="absolute top-[-0.1rem] right-2 text-[#3b2e2a] hover:text-[#a1583c] text-xl font-bold"
+              className="absolute top-[-0.1rem] left-2 text-[#3b2e2a] hover:text-[#a1583c] text-xl font-bold"
               aria-label="Cerrar"
             >
               &times;

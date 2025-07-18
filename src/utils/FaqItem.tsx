@@ -14,9 +14,8 @@ export default function FaqItem({ question, answer }: { question: string; answer
       >
         {question}
         <span
-          className={`text-[#a1583c] transition-transform duration-300 font-light ${
-            isOpen ? "rotate-180" : ""
-          }`}
+          className={`text-[#a1583c] transition-transform duration-300 font-light ${isOpen ? "rotate-180" : ""
+            }`}
         >
           <ArrowDown />
         </span>
@@ -25,14 +24,15 @@ export default function FaqItem({ question, answer }: { question: string; answer
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3 }}
+            initial={{ opacity: 0, maxHeight: 0 }}
+            animate={{ opacity: 1, maxHeight: isOpen ? 500 : 0 }}
+            exit={{ opacity: 0, maxHeight: 0 }}
+            transition={{ duration: 0.5, ease: "easeInOut" }}
             className="overflow-hidden mt-4 text-[#5c4b47]"
           >
             {answer}
           </motion.div>
+
         )}
       </AnimatePresence>
     </div>
