@@ -324,7 +324,7 @@ export default function ProductGrid({ limit, title = "Productos destacados", onl
           onClick={closeModal}
         >
           <div
-            className={`bg-white max-w-xl w-full rounded-xl overflow-hidden shadow-lg text-[#3b2e2a] relative p-4 sm:p-6 ${
+            className={`bg-white max-w-xl w-full rounded-xl overflow-hidden shadow-lg text-[#3b2e2a] relative p-5 sm:p-6 ${
               isVisible ? "animate-fadeIn" : "animate-fadeOut"
             }`}
             onClick={(e) => e.stopPropagation()}
@@ -332,7 +332,7 @@ export default function ProductGrid({ limit, title = "Productos destacados", onl
             <img
               src={selectedProduct.image}
               alt={selectedProduct.title}
-              className="w-full object-cover max-h-80"
+              className="w-full object-cover max-h-80 rounded-lg"
             />
             <div className="space-y-3 mt-4">
               <h3 className="text-xl font-semibold">{selectedProduct.title}</h3>
@@ -355,7 +355,8 @@ export default function ProductGrid({ limit, title = "Productos destacados", onl
             </div>
             <button
               onClick={closeModal}
-              className="absolute top-3 right-3 text-[#3b2e2a] hover:text-[#a1583c] text-xl font-bold"
+              /* el -0.1 funca, no lo muevas */
+              className="absolute top-[-0.1rem] right-2 text-[#3b2e2a] hover:text-[#a1583c] text-xl font-bold"
               aria-label="Cerrar"
             >
               &times;
