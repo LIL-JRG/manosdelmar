@@ -1,6 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import Masonry from "react-masonry-css";
+import { motion, AnimatePresence } from "framer-motion";
+import CloseButton from "@/components/CloseButton";
 
+// --- Tipos y datos ---
 type Product = {
   id: number;
   title: string;
@@ -176,7 +179,6 @@ const products: Product[] = [
   },
 ];
 
-// Para alturas tipo Pinterest
 const getHeightClass = (id: number) => {
   const heightsDesktop = [
     "sm:h-[280px]",
@@ -203,29 +205,28 @@ interface ProductGridProps {
 
 export default function ProductGrid({ limit, title = "Productos destacados", onlyFeatured = false }: ProductGridProps) {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const [isVisible, setIsVisible] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const [cartCount, setCartCount] = useState(0);
+  const closeBtnRef = useRef<HTMLButtonElement>(null);
 
+  // --- Lógica de productos a mostrar ---
   const filteredProducts = onlyFeatured
-  ? products.filter((p) => p.featured).slice(0, limit || products.length)
-  : limit
-  ? products.slice(0, limit)
-  : products;
+    ? products.filter((p) => p.featured).slice(0, limit || products.length)
+    : limit
+    ? products.slice(0, limit)
+    : products;
 
-
-  const displayedProducts = filteredProducts;
-
-  const updateCartCount = () => {
+  // --- Carrito ---
+  const updateCartCount = useCallback(() => {
     const cart = JSON.parse(localStorage.getItem("cart") || "[]");
     const total = cart.reduce((acc: number, item: any) => acc + item.quantity, 0);
     setCartCount(total);
-  };
+  }, []);
 
   const addToCart = () => {
     if (!selectedProduct) return;
     const cart = JSON.parse(localStorage.getItem("cart") || "[]");
     const index = cart.findIndex((item: any) => item.title === selectedProduct.title);
-
     if (index !== -1) {
       cart[index].quantity += 1;
     } else {
@@ -236,35 +237,48 @@ export default function ProductGrid({ limit, title = "Productos destacados", onl
         quantity: 1,
       });
     }
-
     localStorage.setItem("cart", JSON.stringify(cart));
     updateCartCount();
     closeModal();
   };
 
-  useEffect(() => {
-    updateCartCount();
-  }, []);
-
-  useEffect(() => {
-    if (selectedProduct) {
-      const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
-      document.body.style.overflow = "hidden";
-      document.body.style.paddingRight = `${scrollBarWidth}px`;
-      setIsVisible(true);
-    } else {
-      document.body.style.overflow = "auto";
-      document.body.style.paddingRight = "0";
-    }
-  }, [selectedProduct]);
+  // --- Modal ---
+  const openModal = (product: Product) => {
+    setSelectedProduct(product);
+    setIsModalVisible(true);
+    // Bloquear scroll fondo
+    const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
+    document.body.style.overflow = "hidden";
+    document.body.style.paddingRight = `${scrollBarWidth}px`;
+  };
 
   const closeModal = () => {
-    setIsVisible(false);
+    setIsModalVisible(false);
     setTimeout(() => {
       setSelectedProduct(null);
+      document.body.style.overflow = "auto";
+      document.body.style.paddingRight = "0";
     }, 300);
   };
 
+  // --- Efectos ---
+  useEffect(() => {
+    updateCartCount();
+  }, [updateCartCount]);
+
+  // Foco automático en botón de cerrar y cerrar con Escape
+  useEffect(() => {
+    if (isModalVisible && closeBtnRef.current) {
+      closeBtnRef.current.focus();
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === "Escape") closeModal();
+      };
+      window.addEventListener("keydown", handleKeyDown);
+      return () => window.removeEventListener("keydown", handleKeyDown);
+    }
+  }, [isModalVisible]);
+
+  // --- Masonry breakpoints ---
   const breakpointColumnsObj = {
     default: 4,
     1024: 3,
@@ -272,12 +286,14 @@ export default function ProductGrid({ limit, title = "Productos destacados", onl
     0: 2,
   };
 
+  // --- Render ---
   return (
     <section className="py-20 bg-[#fef9f3] px-2 relative" id="catalogo">
-      {/* Ícono flotante del carrito */}
+      {/* Carrito flotante */}
       <a
         href="/cart"
         className="fixed bottom-6 right-6 z-50 bg-[#a1583c] text-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg"
+        aria-label="Ir al carrito"
       >
         <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 16 16" className="w-6 h-6"><path fill="currentColor" d="M2.5 2a.5.5 0 0 0 0 1h.246a.5.5 0 0 1 .48.363l1.586 5.55A1.5 1.5 0 0 0 6.254 10h4.569a1.5 1.5 0 0 0 1.393-.943l1.474-3.686A1 1 0 0 0 12.762 4H4.448l-.261-.912A1.5 1.5 0 0 0 2.746 2H2.5Zm3.274 6.637L4.734 5h8.027l-1.474 3.686a.5.5 0 0 1-.464.314H6.254a.5.5 0 0 1-.48-.363ZM6.5 14a1.5 1.5 0 1 0 0-3a1.5 1.5 0 0 0 0 3Zm0-1a.5.5 0 1 1 0-1a.5.5 0 0 1 0 1Zm4 1a1.5 1.5 0 1 0 0-3a1.5 1.5 0 0 0 0 3Zm0-1a.5.5 0 1 1 0-1a.5.5 0 0 1 0 1Z"/></svg>
         {cartCount > 0 && (
@@ -298,72 +314,82 @@ export default function ProductGrid({ limit, title = "Productos destacados", onl
           className="flex gap-4"
           columnClassName="flex flex-col gap-4"
         >
-          {displayedProducts.map((product) => (
+          {filteredProducts.map((product) => (
             <div
               key={product.id}
-              className={`hover:shadow-lg hover:shadow-[#a1583c]/30 rounded-xl overflow-hidden shadow-md bg-white cursor-pointer transform transition-all duration-300 hover:scale-105 ${getHeightClass(product.id)}`}
-              onClick={() => setSelectedProduct(product)}
+              className={`hover:shadow-lg hover:shadow-[#a1583c]/30 rounded-xl overflow-hidden shadow-md bg-white cursor-pointer transform transition-all duration-300 ${getHeightClass(product.id)}`}
+              onClick={() => openModal(product)}
+              tabIndex={0}
+              role="button"
+              aria-label={`Ver detalles de ${product.title}`}
+              onKeyDown={e => (e.key === "Enter" || e.key === " ") && openModal(product)}
             >
               <img
                 src={product.image}
                 alt={product.title}
                 className="w-full h-full object-cover"
+                draggable={false}
               />
               <div className="p-4 text-[#3b2e2a]">
                 <h3 className="font-medium text-center">{product.title}</h3>
-                
               </div>
             </div>
           ))}
         </Masonry>
       </div>
 
-      {selectedProduct && (
-        <div
-          className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50"
-          onClick={closeModal}
-        >
-          <div
-            className={`bg-white max-w-xl w-full rounded-xl overflow-hidden shadow-lg text-[#3b2e2a] relative p-5 sm:p-6 ${
-              isVisible ? "animate-fadeIn" : "animate-fadeOut"
-            }`}
-            onClick={(e) => e.stopPropagation()}
+      {/* Modal de producto con animación slide-up y fade, imagen centrada y elegante */}
+      <AnimatePresence>
+        {selectedProduct && (
+          <motion.div
+            className="fixed inset-0 z-50 flex items-center justify-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            style={{ backdropFilter: "blur(10px)", background: "rgba(0,0,0,0.18)" }}
+            onClick={closeModal}
           >
-            <img
-              src={selectedProduct.image}
-              alt={selectedProduct.title}
-              className="w-full object-cover max-h-80 rounded-lg"
-            />
-            <div className="space-y-3 mt-4">
-              <h3 className="text-xl font-semibold">{selectedProduct.title}</h3>
-              <p className="text-sm text-[#6b4d42]">{selectedProduct.description}</p>
-              <p className="text-sm">
-                <span className="font-medium">Artesana:</span> {selectedProduct.creator}
-              </p>
-              <p className="text-sm italic text-[#7a5e4f]">"{selectedProduct.story}"</p>
-            </div>
-            <div className="mt-6 flex justify-end">
-              <button
-                onClick={addToCart}
-                className="bg-[#a1583c] hover:bg-[#8d422c] text-white px-4 py-2 rounded-md flex items-center gap-2"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" viewBox="0 0 16 16" fill="currentColor">
-                  <path d="M2.5 2a.5.5 0 0 0 0 1h.246a.5.5 0 0 1 .48.363l1.586 5.55A1.5 1.5 0 0 0 6.254 10h4.569a1.5 1.5 0 0 0 1.393-.943l1.474-3.686A1 1 0 0 0 12.762 4H4.448l-.261-.912A1.5 1.5 0 0 0 2.746 2H2.5Zm3.274 6.637L4.734 5h8.027l-1.474 3.686a.5.5 0 0 1-.464.314H6.254a.5.5 0 0 1-.48-.363ZM6.5 14a1.5 1.5 0 1 0 0-3a1.5 1.5 0 0 0 0 3Zm0-1a.5.5 0 1 1 0-1a.5.5 0 0 1 0 1Zm4 1a1.5 1.5 0 1 0 0-3a1.5 1.5 0 0 0 0 3Zm0-1a.5.5 0 1 1 0-1a.5.5 0 0 1 0 1Z"/>
-                </svg>
-                Agregar al carrito
-              </button>
-            </div>
-            <button
-              onClick={closeModal}
-              /* el -0.1 funca, no lo muevas */
-              className="absolute top-[-0.1rem] left-2 text-[#3b2e2a] hover:text-[#a1583c] text-xl font-bold"
-              aria-label="Cerrar"
+            <motion.div
+              className="bg-white max-w-lg w-full rounded-2xl shadow-2xl relative p-0 overflow-hidden"
+              initial={{ y: 80, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: 80, opacity: 0 }}
+              transition={{ duration: 0.35, ease: [0.4, 0.2, 0.2, 1] }}
+              onClick={e => e.stopPropagation()}
             >
-              &times;
-            </button>
-          </div>
-        </div>
-      )}
+              <CloseButton onClick={closeModal} ref={closeBtnRef} />
+              <div className="flex justify-center items-center bg-white p-6">
+                <img
+                  src={selectedProduct.image}
+                  alt={selectedProduct.title}
+                  className="max-h-[350px] max-w-full rounded-xl shadow-lg border border-[#f0e6e0] object-contain"
+                  style={{ background: "#fff" }}
+                  draggable={false}
+                />
+              </div>
+              <div className="px-6 pb-6">
+                <h3 className="text-xl font-semibold mt-2">{selectedProduct.title}</h3>
+                <p className="text-sm text-[#6b4d42]">{selectedProduct.description}</p>
+                <p className="text-sm">
+                  <span className="font-medium">Artesana:</span> {selectedProduct.creator}
+                </p>
+                <p className="text-sm italic text-[#7a5e4f]">"{selectedProduct.story}"</p>
+                <div className="mt-6 flex justify-end">
+                  <button
+                    onClick={addToCart}
+                    className="bg-[#a1583c] hover:bg-[#8d422c] text-white px-4 py-2 rounded-md flex items-center gap-2 cursor-pointer"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" viewBox="0 0 16 16" fill="currentColor">
+                      <path d="M2.5 2a.5.5 0 0 0 0 1h.246a.5.5 0 0 1 .48.363l1.586 5.55A1.5 1.5 0 0 0 6.254 10h4.569a1.5 1.5 0 0 0 1.393-.943l1.474-3.686A1 1 0 0 0 12.762 4H4.448l-.261-.912A1.5 1.5 0 0 0 2.746 2H2.5Zm3.274 6.637L4.734 5h8.027l-1.474 3.686a.5.5 0 0 1-.464.314H6.254a.5.5 0 0 1-.48-.363ZM6.5 14a1.5 1.5 0 1 0 0-3a1.5 1.5 0 0 0 0 3Zm0-1a.5.5 0 1 1 0-1a.5.5 0 0 1 0 1Zm4 1a1.5 1.5 0 1 0 0-3a1.5 1.5 0 0 0 0 3Zm0-1a.5.5 0 1 1 0-1a.5.5 0 0 1 0 1Z"/>
+                    </svg>
+                    Agregar al carrito
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }
