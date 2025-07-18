@@ -267,8 +267,9 @@ export default function ProductGrid({ limit, title = "Productos destacados", onl
 
   const breakpointColumnsObj = {
     default: 4,
-    768: 3,
-    0: 3,
+    1024: 3,
+    768: 2,
+    0: 2,
   };
 
   return (
